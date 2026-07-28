@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Chá de Casa Nova</title>
+<meta name="description" content="Nossa casa nova está começando. Se quiser fazer parte dela, aqui tem um cantinho pra você.">
+<meta name="theme-color" content="#C4674F">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏡</text></svg>">
+
+<!-- Open Graph: controla como o link aparece no WhatsApp -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Chá de Casa Nova">
+<meta property="og:description" content="Nossa casa nova está começando. Se quiser fazer parte dela, aqui tem um cantinho pra você.">
+
+<style>
+  :root {
+    color-scheme: light;
+    --creme:      #FBF6EE;
+    --creme-alt:  #F4EADC;
+    --papel:      #FFFFFF;
+    --tinta:      #2E2724;
+    --tinta-suave:#6B5F58;
+    --terracota:  #C4674F;
+    --terracota-esc:#A9523C;
+    --verde:      #4A6B52;
+    --borda:      #EADFCF;
+    --sombra:     0 1px 2px rgba(46,39,36,.04), 0 8px 24px -8px rgba(46,39,36,.14);
+    --serif: ui-serif, Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    font-family: var(--sans);
+    color: var(--tinta);
+    background-color: var(--creme);
+    background-image:
+      radial-gradient(1000px 500px at 12% -8%, #FDEEE0 0%, transparent 60%),
+      radial-gradient(800px 420px at 92% 4%, #EEF2E8 0%, transparent 62%);
+    background-repeat: no-repeat;
+    -webkit-font-smoothing: antialiased;
+    line-height: 1.6;
+  }
+
+  .wrap { max-width: 660px; margin: 0 auto; padding: 0 20px 72px; }
+
+  /* ---------- Capa ---------- */
+  header { text-align: center; padding: 64px 0 40px; }
+  .selo {
+    display: inline-block; font-size: 12px; letter-spacing: .18em;
+    text-transform: uppercase; color: var(--terracota); font-weight: 600;
+    padding: 7px 16px; border: 1px solid var(--borda); border-radius: 999px;
+    background: rgba(255,255,255,.7); margin-bottom: 26px;
+  }
+  h1 {
+    font-family: var(--serif); font-weight: 400; margin: 0 0 6px;
+    font-size: clamp(2.4rem, 9vw, 3.6rem); line-height: 1.08; letter-spacing: -.02em;
+  }
+  .casal { font-family: var(--serif); font-size: clamp(1.05rem,4vw,1.25rem); color: var(--terracota); margin: 0 0 24px; font-style: italic; }
+  .recado { color: var(--tinta-suave); font-size: 1.02rem; max-width: 46ch; margin: 0 auto; }
+
+  .festa {
+    margin: 32px auto 0; max-width: 420px; display: flex; gap: 8px;
+    justify-content: center; flex-wrap: wrap;
+  }
+  .festa div {
+    background: rgba(255,255,255,.8); border: 1px solid var(--borda);
+    border-radius: 12px; padding: 10px 16px; font-size: .9rem; color: var(--tinta-suave);
+  }
+  .festa strong { color: var(--tinta); font-weight: 600; }
+
+  .divisor { display: flex; align-items: center; gap: 14px; color: var(--borda); margin: 44px 0 30px; }
+  .divisor::before, .divisor::after { content: ""; flex: 1; height: 1px; background: var(--borda); }
+  .divisor span { font-size: 1.1rem; }
+
+  .instrucoes {
+    background: var(--creme-alt); border-radius: 16px; padding: 20px 24px;
+    font-size: .93rem; color: var(--tinta-suave); margin-bottom: 34px;
+  }
+  .instrucoes h2 { font-family: var(--serif); font-size: 1.1rem; color: var(--tinta); margin: 0 0 10px; font-weight: 400; }
+  .instrucoes ol { margin: 0; padding-left: 20px; }
+  .instrucoes li { margin-bottom: 5px; }
+  .instrucoes li:last-child { margin-bottom: 0; }
+
+  /* ---------- Cartão de presente ---------- */
+  .item {
+    background: var(--papel); border: 1px solid var(--borda); border-radius: 20px;
+    padding: 26px; margin-bottom: 20px; box-shadow: var(--sombra);
+  }
+  .item-topo { display: flex; gap: 16px; align-items: flex-start; }
+  .icone {
+    flex: 0 0 60px; height: 60px; border-radius: 14px; background: var(--creme-alt);
+    display: grid; place-items: center; font-size: 30px; overflow: hidden;
+  }
+  .icone img { width: 100%; height: 100%; object-fit: cover; }
+  .item h3 { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; margin: 0 0 3px; letter-spacing: -.01em; }
+  .item .sub { color: var(--tinta-suave); font-size: .92rem; margin: 0; }
+  .meta { margin-top: 8px; font-size: .85rem; color: var(--tinta-suave); }
+  .meta b { color: var(--tinta); font-weight: 600; }
+
+  /* ---------- Seletor de cotas ---------- */
+  .cotas { margin-top: 22px; padding-top: 22px; border-top: 1px dashed var(--borda); }
+  .cotas-rotulo { font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--tinta-suave); margin-bottom: 12px; font-weight: 600; }
+  .stepper { display: flex; align-items: center; gap: 14px; }
+  .stepper button {
+    width: 42px; height: 42px; border-radius: 12px; border: 1px solid var(--borda);
+    background: var(--creme); color: var(--tinta); font-size: 22px; line-height: 1;
+    cursor: pointer; flex: 0 0 auto; transition: background .15s, border-color .15s;
+  }
+  .stepper button:hover:not(:disabled) { background: var(--creme-alt); border-color: #DCCDB8; }
+  .stepper button:disabled { opacity: .35; cursor: not-allowed; }
+  .stepper .qtd { font-variant-numeric: tabular-nums; min-width: 62px; text-align: center; font-size: .9rem; color: var(--tinta-suave); }
+  .stepper .qtd b { display: block; font-size: 1.35rem; color: var(--tinta); font-family: var(--serif); font-weight: 400; }
+  .valor { margin-left: auto; text-align: right; }
+  .valor small { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--tinta-suave); }
+  .valor strong { font-family: var(--serif); font-size: 1.6rem; font-weight: 400; color: var(--terracota); letter-spacing: -.01em; }
+
+  /* ---------- QR ---------- */
+  .qr-area { margin-top: 22px; display: flex; gap: 20px; align-items: center; }
+  /* 168px dá ~3,4px por módulo num QR de 49 módulos — confortável pra escanear
+     a tela do computador com o celular. */
+  .qr {
+    flex: 0 0 168px; width: 168px; height: 168px; padding: 10px;
+    background: #fff; border: 1px solid var(--borda); border-radius: 12px;
+  }
+  .qr svg { display: block; width: 100%; height: 100%; }
+  .qr-lado { flex: 1; min-width: 0; }
+  .qr-lado p { margin: 0 0 12px; font-size: .86rem; color: var(--tinta-suave); }
+  .copiar {
+    width: 100%; padding: 13px 16px; border: none; border-radius: 12px;
+    background: var(--terracota); color: #fff; font-size: .95rem; font-weight: 600;
+    font-family: inherit; cursor: pointer; transition: background .15s;
+  }
+  .copiar:hover { background: var(--terracota-esc); }
+  .copiar.ok { background: var(--verde); }
+
+  /* ---------- Valor livre ---------- */
+  .livre { background: var(--creme-alt); border-style: dashed; }
+  .campo-valor { display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+  .campo-valor span { font-family: var(--serif); font-size: 1.3rem; color: var(--tinta-suave); }
+  .campo-valor input {
+    flex: 1; min-width: 0; padding: 12px 14px; font-size: 1.15rem; font-family: var(--serif);
+    border: 1px solid var(--borda); border-radius: 12px; background: #fff; color: var(--tinta);
+  }
+  .campo-valor input:focus { outline: 2px solid var(--terracota); outline-offset: 1px; }
+
+  footer { text-align: center; margin-top: 48px; color: var(--tinta-suave); font-size: .88rem; }
+  footer .coracao { color: var(--terracota); }
+
+  @media (max-width: 460px) {
+    .qr-area { flex-direction: column; align-items: stretch; }
+    .qr { align-self: center; flex-basis: auto; width: 200px; height: 200px; }
+    .valor { margin-left: 0; text-align: left; width: 100%; margin-top: 14px; }
+    .stepper { flex-wrap: wrap; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header>
+    <div class="selo" id="selo">Chá de Casa Nova</div>
+    <h1 id="titulo"></h1>
+    <p class="casal" id="casal"></p>
+    <p class="recado" id="recado"></p>
+    <div class="festa" id="festa"></div>
+  </header>
+
+  <div class="divisor"><span>🏡</span></div>
+
+  <div class="instrucoes">
+    <h2>Como funciona</h2>
+    <ol>
+      <li>Escolha um presente e quantas cotas quer ajudar.</li>
+      <li>Escaneie o QR Code ou toque em <b>Copiar código PIX</b>.</li>
+      <li>Cole em <b>PIX &rsaquo; Copia e Cola</b> no app do seu banco. O valor já vai preenchido.</li>
+    </ol>
+  </div>
+
+  <main id="lista"></main>
+
+  <footer>
+    Obrigado por fazer parte da nossa casa <span class="coracao">&#10084;</span>
+  </footer>
+</div>
+
+<script src="vendor/qrcode.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════════
+   ①  CONFIGURAÇÃO — edite só esta parte
+   ═══════════════════════════════════════════════════════════════════ */
+
+const CONFIG = {
+  // Sua chave PIX. Pode ser:
+  //   CPF ......... "12345678909"        (só números)
+  //   Celular ..... "+5511999998888"     (com +55)
+  //   E-mail ...... "voce@email.com"
+  //   Aleatória ... "123e4567-e89b-12d3-a456-426614174000"
+  chavePix: "SUA-CHAVE-PIX-AQUI",
+
+  // Nome do recebedor (máx. 25 caracteres, sem acento — é sanitizado sozinho)
+  nomeRecebedor: "SEU NOME",
+
+  // Cidade do recebedor (máx. 15 caracteres)
+  cidade: "SAO PAULO",
+
+  // Textos da capa
+  titulo: "Nossa casa nova",
+  casal: "Christian & convidados",
+  recado: "Estamos montando nosso cantinho e ficaríamos muito felizes com a sua ajuda. " +
+          "Escolha um presente abaixo — qualquer cota, por menor que pareça, faz diferença.",
+
+  // Detalhes da festa. Deixe a string vazia ("") para esconder cada um.
+  festa: {
+    data: "",       // ex.: "Sábado, 12 de setembro"
+    hora: "",       // ex.: "a partir das 15h"
+    endereco: "",   // ex.: "Rua das Flores, 123"
+  },
+
+  // Identifica cada pagamento no seu extrato bancário (campo txid do PIX).
+  // Se algum banco reclamar do código, mude para false.
+  usarTxid: true,
+};
+
+// Os presentes. `cota` é o valor de cada fatia; `total` é a meta do item.
+// `foto` é opcional: coloque a imagem em fotos/ e escreva "fotos/geladeira.jpg".
+const ITENS = [
+  {
+    nome: "Geladeira",
+    descricao: "A peça mais importante da cozinha",
+    emoji: "🧊",
+    total: 4000,
+    cota: 100,
+    txid: "GELADEIRA",
+    foto: "",
+  },
+  {
+    nome: "Fogão",
+    descricao: "Pra inaugurar com um jantar",
+    emoji: "🔥",
+    total: 2500,
+    cota: 125,
+    txid: "FOGAO",
+    foto: "",
+  },
+  {
+    nome: "Máquina de lavar",
+    descricao: "O luxo de não lavar à mão",
+    emoji: "🫧",
+    total: 3000,
+    cota: 150,
+    txid: "MAQLAVAR",
+    foto: "",
+  },
+  {
+    nome: "Sofá",
+    descricao: "Onde as visitas vão ficar até tarde",
+    emoji: "🛋️",
+    total: 3500,
+    cota: 100,
+    txid: "SOFA",
+    foto: "",
+  },
+  {
+    nome: "Jogo de panelas",
+    descricao: "Completo, do refogado ao molho",
+    emoji: "🍲",
+    total: 800,
+    cota: 80,
+    txid: "PANELAS",
+    foto: "",
+  },
+  {
+    nome: "Microondas",
+    descricao: "Pro café requentado das segundas",
+    emoji: "📻",
+    total: 900,
+    cota: 90,
+    txid: "MICROONDAS",
+    foto: "",
+  },
+];
+
+// Mostrar o cartão "qualquer valor" no final?
+const MOSTRAR_VALOR_LIVRE = true;
+
+/* ═══════════════════════════════════════════════════════════════════
+   ②  Daqui pra baixo não precisa mexer
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ---------- Gerador de BR Code (PIX copia e cola) ----------
+   Formato EMV®QRCPS definido pelo Banco Central: cada campo é
+   ID (2 dígitos) + tamanho (2 dígitos) + valor, e o último campo
+   é um CRC16 calculado sobre todo o resto.                       */
+
+const bytes = (s) => new TextEncoder().encode(s).length;
+
+function tlv(id, valor) {
+  return id + String(bytes(valor)).padStart(2, "0") + valor;
+}
+
+// CRC16/CCITT-FALSE: polinômio 0x1021, valor inicial 0xFFFF.
+function crc16(str) {
+  const buf = new TextEncoder().encode(str);
+  let crc = 0xffff;
+  for (const b of buf) {
+    crc ^= b << 8;
+    for (let i = 0; i < 8; i++) {
+      crc = crc & 0x8000 ? ((crc << 1) ^ 0x1021) & 0xffff : (crc << 1) & 0xffff;
+    }
+  }
+  return crc.toString(16).toUpperCase().padStart(4, "0");
+}
+
+// Remove acentos e qualquer caractere fora do ASCII imprimível.
+function ascii(txt, limite) {
+  const limpo = txt
+    .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^\x20-\x7E]/g, "")
+    .toUpperCase().trim();
+  return limpo.slice(0, limite).trim();
+}
+
+function limparTxid(txt) {
+  const limpo = (txt || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 25);
+  return limpo || "***";
+}
+
+/**
+ * Monta o payload PIX.
+ * @param {number|null} valor  Valor em reais. null/0 = o pagador digita no banco.
+ * @param {string} txid        Identificador que aparece no extrato.
+ */
+function payloadPix(valor, txid) {
+  const conta =
+    tlv("00", "br.gov.bcb.pix") +
+    tlv("01", CONFIG.chavePix.trim());
+
+  let p =
+    tlv("00", "01") +                                   // versão do payload
+    tlv("26", conta) +                                  // conta do recebedor
+    tlv("52", "0000") +                                 // categoria do comércio
+    tlv("53", "986");                                   // moeda: BRL
+
+  if (valor && valor > 0) {
+    p += tlv("54", valor.toFixed(2));                   // valor já preenchido
+  }
+
+  p +=
+    tlv("58", "BR") +                                   // país
+    tlv("59", ascii(CONFIG.nomeRecebedor, 25)) +        // nome do recebedor
+    tlv("60", ascii(CONFIG.cidade, 15)) +               // cidade
+    tlv("62", tlv("05", CONFIG.usarTxid ? limparTxid(txid) : "***"));
+
+  p += "6304";                                          // cabeçalho do CRC
+  return p + crc16(p);
+}
+
+/* ---------- Desenho do QR ---------- */
+
+function desenharQr(elemento, texto) {
+  const qr = qrcode(0, "M");           // 0 = escolhe a versão automaticamente
+  qr.addData(texto);
+  qr.make();
+  elemento.innerHTML = qr.createSvgTag({ cellSize: 4, margin: 1, scalable: true });
+}
+
+/* ---------- Utilidades de tela ---------- */
+
+const brl = new Intl.NumberFormat("pt-BR", {
+  style: "currency", currency: "BRL", minimumFractionDigits: 0, maximumFractionDigits: 2,
+});
+
+function copiarTexto(texto) {
+  if (navigator.clipboard && window.isSecureContext) {
+    return navigator.clipboard.writeText(texto);
+  }
+  // Fallback para navegadores antigos / http
+  const ta = document.createElement("textarea");
+  ta.value = texto;
+  ta.setAttribute("readonly", "");
+  ta.style.position = "fixed";
+  ta.style.opacity = "0";
+  document.body.appendChild(ta);
+  ta.select();
+  try { document.execCommand("copy"); } finally { document.body.removeChild(ta); }
+  return Promise.resolve();
+}
+
+function ligarBotaoCopiar(botao, obterTexto) {
+  let timer;
+  const original = botao.textContent;
+  botao.addEventListener("click", () => {
+    copiarTexto(obterTexto()).then(() => {
+      botao.textContent = "Código copiado! ✓";
+      botao.classList.add("ok");
+      clearTimeout(timer);
+      timer = setTimeout(() => {
+        botao.textContent = original;
+        botao.classList.remove("ok");
+      }, 2600);
+    });
+  });
+}
+
+/* ---------- Montagem da página ---------- */
+
+function montarCapa() {
+  document.getElementById("titulo").textContent = CONFIG.titulo;
+  document.getElementById("casal").textContent = CONFIG.casal;
+  document.getElementById("recado").textContent = CONFIG.recado;
+
+  const festa = document.getElementById("festa");
+  const partes = [
+    ["📅", CONFIG.festa.data],
+    ["🕒", CONFIG.festa.hora],
+    ["📍", CONFIG.festa.endereco],
+  ].filter(([, texto]) => texto);
+
+  for (const [icone, texto] of partes) {
+    const div = document.createElement("div");
+    div.innerHTML = `${icone} <strong>${texto}</strong>`;
+    festa.appendChild(div);
+  }
+}
+
+function cartaoItem(item) {
+  const maxCotas = Math.max(1, Math.round(item.total / item.cota));
+  let qtd = 1;
+
+  const card = document.createElement("section");
+  card.className = "item";
+  card.innerHTML = `
+    <div class="item-topo">
+      <div class="icone">${
+        item.foto
+          ? `<img src="${item.foto}" alt="${item.nome}" loading="lazy">`
+          : (item.emoji || "🎁")
+      }</div>
+      <div>
+        <h3>${item.nome}</h3>
+        <p class="sub">${item.descricao || ""}</p>
+        <p class="meta">
+          Meta de <b>${brl.format(item.total)}</b> &middot;
+          ${maxCotas} cotas de <b>${brl.format(item.cota)}</b>
+        </p>
+      </div>
+    </div>
+
+    <div class="cotas">
+      <div class="cotas-rotulo">Quantas cotas você quer ajudar?</div>
+      <div class="stepper">
+        <button type="button" data-menos aria-label="Menos uma cota">&minus;</button>
+        <div class="qtd"><b data-qtd>1</b> cota</div>
+        <button type="button" data-mais aria-label="Mais uma cota">+</button>
+        <div class="valor">
+          <small>Você envia</small>
+          <strong data-total></strong>
+        </div>
+      </div>
+    </div>
+
+    <div class="qr-area">
+      <div class="qr" data-qr></div>
+      <div class="qr-lado">
+        <p>Escaneie com o app do banco ou copie o código abaixo.</p>
+        <button type="button" class="copiar">Copiar código PIX</button>
+      </div>
+    </div>
+  `;
+
+  const elQtd    = card.querySelector("[data-qtd]");
+  const elTotal  = card.querySelector("[data-total]");
+  const elQr     = card.querySelector("[data-qr]");
+  const btnMenos = card.querySelector("[data-menos]");
+  const btnMais  = card.querySelector("[data-mais]");
+  const rotulo   = card.querySelector(".qtd");
+
+  let payloadAtual = "";
+
+  function atualizar() {
+    const valor = qtd * item.cota;
+    payloadAtual = payloadPix(valor, item.txid);
+
+    elQtd.textContent = qtd;
+    rotulo.innerHTML = `<b data-qtd>${qtd}</b> ${qtd === 1 ? "cota" : "cotas"}`;
+    elTotal.textContent = brl.format(valor);
+    btnMenos.disabled = qtd <= 1;
+    btnMais.disabled = qtd >= maxCotas;
+    desenharQr(elQr, payloadAtual);
+  }
+
+  btnMenos.addEventListener("click", () => { if (qtd > 1)        { qtd--; atualizar(); } });
+  btnMais .addEventListener("click", () => { if (qtd < maxCotas) { qtd++; atualizar(); } });
+  ligarBotaoCopiar(card.querySelector(".copiar"), () => payloadAtual);
+
+  atualizar();
+  return card;
+}
+
+function cartaoValorLivre() {
+  const card = document.createElement("section");
+  card.className = "item livre";
+  card.innerHTML = `
+    <div class="item-topo">
+      <div class="icone">💌</div>
+      <div>
+        <h3>Qualquer valor</h3>
+        <p class="sub">Prefere ajudar sem escolher um presente? Também vale.</p>
+      </div>
+    </div>
+
+    <div class="cotas">
+      <div class="cotas-rotulo">Quanto você quer enviar?</div>
+      <div class="campo-valor">
+        <span>R$</span>
+        <input type="number" inputmode="decimal" min="1" step="1"
+               placeholder="deixe vazio pra digitar no banco" data-valor>
+      </div>
+    </div>
+
+    <div class="qr-area">
+      <div class="qr" data-qr></div>
+      <div class="qr-lado">
+        <p>Escaneie com o app do banco ou copie o código abaixo.</p>
+        <button type="button" class="copiar">Copiar código PIX</button>
+      </div>
+    </div>
+  `;
+
+  const input = card.querySelector("[data-valor]");
+  const elQr  = card.querySelector("[data-qr]");
+  let payloadAtual = "";
+
+  function atualizar() {
+    const valor = parseFloat(input.value);
+    payloadAtual = payloadPix(isFinite(valor) && valor > 0 ? valor : null, "PRESENTE");
+    desenharQr(elQr, payloadAtual);
+  }
+
+  input.addEventListener("input", atualizar);
+  ligarBotaoCopiar(card.querySelector(".copiar"), () => payloadAtual);
+
+  atualizar();
+  return card;
+}
+
+function iniciar() {
+  montarCapa();
+
+  const lista = document.getElementById("lista");
+  for (const item of ITENS) lista.appendChild(cartaoItem(item));
+  if (MOSTRAR_VALOR_LIVRE) lista.appendChild(cartaoValorLivre());
+
+  if (CONFIG.chavePix.includes("SUA-CHAVE")) {
+    console.warn("⚠️  Configure a chave PIX em CONFIG.chavePix antes de publicar.");
+  }
+}
+
+iniciar();
+</script>
+</body>
+</html>
