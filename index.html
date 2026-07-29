@@ -110,6 +110,10 @@
     display: block; width: 100%; height: 100%;
     min-width: 0; min-height: 0; object-fit: contain;
   }
+  /* Para foto de ambiente (ajuste: "cover" no item): preenche o quadro todo.
+     O overflow: hidden do .foto já arredonda o canto da imagem. */
+  .foto--cheia { padding: 0; }
+  .foto--cheia img { object-fit: cover; }
   .item h3 { font-family: var(--serif); font-weight: 400; font-size: 1.4rem; margin: 0 0 3px; letter-spacing: -.01em; }
   .item .sub { color: var(--tinta-suave); font-size: .92rem; margin: 0; }
   .meta { margin-top: 8px; font-size: .85rem; color: var(--tinta-suave); }
@@ -129,6 +133,8 @@
   .stepper .qtd { font-variant-numeric: tabular-nums; min-width: 62px; text-align: center; font-size: .9rem; color: var(--tinta-suave); }
   .stepper .qtd b { display: block; font-size: 1.35rem; color: var(--tinta); font-family: var(--serif); font-weight: 400; }
   .valor { margin-left: auto; text-align: right; }
+  /* Presente de cota única: não tem stepper, então o valor manda no bloco. */
+  .valor--unico { margin-left: 0; text-align: left; }
   .valor small { display: block; font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; color: var(--tinta-suave); }
   .valor strong { font-family: var(--serif); font-size: 1.6rem; font-weight: 400; color: var(--terracota); letter-spacing: -.01em; }
 
@@ -362,6 +368,18 @@ const ITENS = [
     cota: 150,
     txid: "Televisao",
     foto: "fotos/tv.jpg",
+  },
+  {
+    nome: "Roupa de cama",
+    descricao: "Seu presente vai estar presente em todas as nossas noites de descanso.",
+    emoji: "🛏️",
+    total: 200,
+    cota: 200,
+    txid: "RoupaDeCama",
+    foto: "fotos/roupa-cama.jpg",
+    // Foto de ambiente, não recorte em fundo branco: preenche o quadro
+    // inteiro em vez de ficar com tarja branca dos lados no celular.
+    ajuste: "cover",
   },
   {
     nome: "Talheres",
@@ -601,6 +619,7 @@ function montarCapa() {
 
 function cartaoItem(item) {
   const maxCotas = Math.max(1, Math.round(item.total / item.cota));
+  const umaCotaSo = maxCotas === 1;
   let qtd = 1;
 
   const card = document.createElement("section");
@@ -609,30 +628,45 @@ function cartaoItem(item) {
     <div class="item-topo">
       ${
         item.foto
-          ? `<div class="foto"><img src="${item.foto}" alt="${item.nome}" decoding="async"></div>`
+          ? `<div class="foto${item.ajuste === "cover" ? " foto--cheia" : ""}">
+               <img src="${item.foto}" alt="${item.nome}" decoding="async">
+             </div>`
           : `<div class="icone">${item.emoji || "🎁"}</div>`
       }
       <div>
         <h3>${item.nome}</h3>
         <p class="sub">${item.descricao || ""}</p>
         <p class="meta">
-          Meta de <b>${brl.format(item.total)}</b> &middot;
-          ${maxCotas} cotas de <b>${brl.format(item.cota)}</b>
+          ${
+            // Presente de cota única: "Meta de X · 1 cota de X" é redundante.
+            umaCotaSo
+              ? `Presente de <b>${brl.format(item.total)}</b>`
+              : `Meta de <b>${brl.format(item.total)}</b> &middot;
+                 ${maxCotas} cotas de <b>${brl.format(item.cota)}</b>`
+          }
         </p>
       </div>
     </div>
 
     <div class="cotas">
-      <div class="cotas-rotulo">Quantas cotas você quer ajudar?</div>
-      <div class="stepper">
-        <button type="button" data-menos aria-label="Menos uma cota">&minus;</button>
-        <div class="qtd"><b data-qtd>1</b> cota</div>
-        <button type="button" data-mais aria-label="Mais uma cota">+</button>
-        <div class="valor">
-          <small>Você envia</small>
-          <strong data-total></strong>
-        </div>
-      </div>
+      ${
+        // Sem stepper quando só cabe uma cota: seriam dois botões travados.
+        umaCotaSo
+          ? `<div class="valor valor--unico">
+               <small>Você envia</small>
+               <strong data-total></strong>
+             </div>`
+          : `<div class="cotas-rotulo">Quantas cotas você quer ajudar?</div>
+             <div class="stepper">
+               <button type="button" data-menos aria-label="Menos uma cota">&minus;</button>
+               <div class="qtd"></div>
+               <button type="button" data-mais aria-label="Mais uma cota">+</button>
+               <div class="valor">
+                 <small>Você envia</small>
+                 <strong data-total></strong>
+               </div>
+             </div>`
+      }
     </div>
 
     <div class="qr-area">
@@ -656,15 +690,15 @@ function cartaoItem(item) {
     const valor = qtd * item.cota;
     payloadAtual = payloadPix(valor, item.txid);
 
-    rotulo.innerHTML = `<b>${qtd}</b> ${qtd === 1 ? "cota" : "cotas"}`;
     elTotal.textContent = brl.format(valor);
-    btnMenos.disabled = qtd <= 1;
-    btnMais.disabled = qtd >= maxCotas;
+    if (rotulo) rotulo.innerHTML = `<b>${qtd}</b> ${qtd === 1 ? "cota" : "cotas"}`;
+    if (btnMenos) btnMenos.disabled = qtd <= 1;
+    if (btnMais) btnMais.disabled = qtd >= maxCotas;
     desenharQr(elQr, payloadAtual);
   }
 
-  btnMenos.addEventListener("click", () => { if (qtd > 1)        { qtd--; atualizar(); } });
-  btnMais .addEventListener("click", () => { if (qtd < maxCotas) { qtd++; atualizar(); } });
+  if (btnMenos) btnMenos.addEventListener("click", () => { if (qtd > 1)        { qtd--; atualizar(); } });
+  if (btnMais)  btnMais .addEventListener("click", () => { if (qtd < maxCotas) { qtd++; atualizar(); } });
   ligarBotaoCopiar(card.querySelector(".copiar"), () => payloadAtual);
 
   atualizar();
