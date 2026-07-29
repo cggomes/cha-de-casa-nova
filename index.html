@@ -297,7 +297,7 @@ const ITENS = [
     emoji: "🧊",
     total: 4000,
     cota: 100,
-    txid: "GELADEIRA",
+    txid: "Geladeira",
     foto: "",
   },
   {
@@ -306,7 +306,7 @@ const ITENS = [
     emoji: "🔥",
     total: 2500,
     cota: 125,
-    txid: "FOGAO",
+    txid: "Fogao",
     foto: "",
   },
   {
@@ -315,7 +315,7 @@ const ITENS = [
     emoji: "🫧",
     total: 3000,
     cota: 150,
-    txid: "MAQLAVAR",
+    txid: "MaquinaDeLavar",
     foto: "",
   },
 ];
@@ -390,9 +390,13 @@ function ascii(txt, limite) {
   return limpo.slice(0, limite).trim();
 }
 
+/* O txid s\u00f3 aceita letras e n\u00fameros \u2014 sem espa\u00e7o, acento ou pontua\u00e7\u00e3o. Por isso
+   escrevemos em camelCase ("MaquinaDeLavar"), que fica bem mais leg\u00edvel no
+   extrato do que tudo junto e em mai\u00fasculas. N\u00e3o for\u00e7amos mai\u00fasculas aqui de
+   prop\u00f3sito; se algum PSP normalizar depois, n\u00e3o faz diferen\u00e7a. */
 function limparTxid(txt) {
   const limpo = (txt || "").normalize("NFD").replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^A-Za-z0-9]/g, "").toUpperCase().slice(0, 25);
+    .replace(/[^A-Za-z0-9]/g, "").slice(0, 25);
   return limpo || "***";
 }
 
@@ -603,7 +607,7 @@ function cartaoValorLivre() {
 
   function atualizar() {
     const valor = parseFloat(input.value);
-    payloadAtual = payloadPix(isFinite(valor) && valor > 0 ? valor : null, "PRESENTE");
+    payloadAtual = payloadPix(isFinite(valor) && valor > 0 ? valor : null, "Presente");
     desenharQr(elQr, payloadAtual);
   }
 
