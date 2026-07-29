@@ -161,6 +161,20 @@
   }
   .campo-valor input:focus { outline: 2px solid var(--terracota); outline-offset: 1px; }
 
+  /* ---------- Dar Pitaco (a cota da piada) ---------- */
+  .pitaco {
+    background:
+      linear-gradient(#fff, #fff) padding-box,
+      linear-gradient(135deg, var(--terracota), var(--verde)) border-box;
+    border: 2px solid transparent;
+  }
+  .pitaco .icone { background: var(--creme-alt); }
+  .pitaco h3 { color: var(--terracota); }
+  .selo-nivel {
+    margin: 14px 0 0; font-size: .84rem; color: var(--verde);
+    font-style: italic;
+  }
+
   /* ---------- Lojinhas ---------- */
   .secao-titulo { text-align: center; margin-bottom: 26px; }
   .secao-titulo h2 {
@@ -247,6 +261,16 @@
 
   <main id="lista"></main>
 
+  <section id="secao-pitaco" hidden>
+    <div class="divisor"><span>🗣️</span></div>
+    <div class="secao-titulo">
+      <h2>Dar Pitaco</h2>
+      <p>A cota mais nobre de todas. Aqui você não compra um móvel —
+         compra o direito de opinar sobre ele.</p>
+    </div>
+    <div id="pitaco"></div>
+  </section>
+
   <section id="secao-lojas" hidden>
     <div class="divisor"><span>🛍️</span></div>
     <div class="secao-titulo">
@@ -313,29 +337,47 @@ const CONFIG = {
 // `foto` é opcional: coloque a imagem em fotos/ e escreva "fotos/geladeira.jpg".
 const ITENS = [
   {
-    nome: "Geladeira",
-    descricao: "Electrolux French Door — a peça mais importante da cozinha",
-    emoji: "🧊",
-    total: 4000,
-    cota: 100,
-    txid: "Geladeira",
-    foto: "fotos/geladeira.jpg",
+    nome: "Toalhas de banho",
+    descricao: "Ajude a garantir que a gente saia do banho seco e feliz!",
+    emoji: "🛁",
+    total: 140,
+    cota: 140,
+    txid: "Toalhas",
+    foto: "fotos/toalhas.webp",
   },
   {
-    nome: "Cooktop de indução",
-    descricao: "Electrolux, 4 bocas — pra inaugurar com um jantar",
-    emoji: "🔥",
-    total: 2500,
-    cota: 125,
-    txid: "Cooktop",
-    foto: "fotos/fogao.jpg",
+    nome: "Jogo de pratos",
+    descricao: "Um prato bonito deixa até miojo com cara de jantar chique.",
+    emoji: "🍽️",
+    total: 100,
+    cota: 100,
+    txid: "Pratos",
+    foto: "fotos/pratos.jpg",
+  },
+  {
+    nome: "Televisão",
+    descricao: "Porque a parede está se sentindo muito vazia.",
+    emoji: "📺",
+    total: 1200,
+    cota: 150,
+    txid: "Televisao",
+    foto: "fotos/tv.jpg",
+  },
+  {
+    nome: "Talheres",
+    descricao: "Prometemos não discutir por causa do último garfo da gaveta",
+    emoji: "🍴",
+    total: 80,
+    cota: 80,
+    txid: "Talheres",
+    foto: "fotos/talheres.jpg",
   },
   {
     nome: "Lava-louças",
-    descricao: "Samsung slim — o luxo de nunca mais lavar à mão",
+    descricao: "O luxo de nunca mais lavar à mão",
     emoji: "🫧",
-    total: 3000,
-    cota: 150,
+    total: 4000,
+    cota: 200,
     txid: "LavaLoucas",
     foto: "fotos/lava-loucas.jpg",
   },
@@ -343,6 +385,43 @@ const ITENS = [
 
 // Mostrar o cartão "qualquer valor" no final?
 const MOSTRAR_VALOR_LIVRE = true;
+
+/* ---------- Dar Pitaco ----------
+   A cota da piada: cada R$ 500 libera um "direito" de opinar sobre a casa.
+   `niveis` vai do 1 pra cima — o texto muda conforme a quantidade de cotas,
+   e o máximo de cotas é o tamanho da lista. Mexa nos textos à vontade. */
+const PITACO = {
+  ativo: true,
+  cota: 500,
+  txid: "Pitaco",
+  niveis: [
+    {
+      titulo: "Pitaco Iniciante",
+      texto: "Você ganha o direito de opinar sobre a cor de <b>uma</b> parede. " +
+             "Ouvir a opinião está incluso; obedecer, não.",
+    },
+    {
+      titulo: "Pitaco Avançado",
+      texto: "Duas paredes e a localização de <b>um</b> quadro. " +
+             "Inclui também o direito de batizar a planta da sala.",
+    },
+    {
+      titulo: "Pitaco Sênior",
+      texto: "Direito a mexer na playlist da festa. " +
+             "Uma música. Escolha com sabedoria, todos vão julgar.",
+    },
+    {
+      titulo: "Pitaco Master",
+      texto: "Libera o <i>“eu avisei”</i> vitalício sempre que a gente errar " +
+             "na decoração — e olha, vai acontecer.",
+    },
+    {
+      titulo: "Conselheiro Oficial da Casa",
+      texto: "Consulta obrigatória antes de qualquer compra grande. " +
+             "Prometemos ligar. Não prometemos atender.",
+    },
+  ],
+};
 
 /* ---------- Lojinhas ----------
    Listas de presentes que você montou em lojas online. O convidado clica,
@@ -530,7 +609,7 @@ function cartaoItem(item) {
     <div class="item-topo">
       ${
         item.foto
-          ? `<div class="foto"><img src="${item.foto}" alt="${item.nome}" width="640" height="640" decoding="async"></div>`
+          ? `<div class="foto"><img src="${item.foto}" alt="${item.nome}" decoding="async"></div>`
           : `<div class="icone">${item.emoji || "🎁"}</div>`
       }
       <div>
@@ -579,6 +658,80 @@ function cartaoItem(item) {
 
     rotulo.innerHTML = `<b>${qtd}</b> ${qtd === 1 ? "cota" : "cotas"}`;
     elTotal.textContent = brl.format(valor);
+    btnMenos.disabled = qtd <= 1;
+    btnMais.disabled = qtd >= maxCotas;
+    desenharQr(elQr, payloadAtual);
+  }
+
+  btnMenos.addEventListener("click", () => { if (qtd > 1)        { qtd--; atualizar(); } });
+  btnMais .addEventListener("click", () => { if (qtd < maxCotas) { qtd++; atualizar(); } });
+  ligarBotaoCopiar(card.querySelector(".copiar"), () => payloadAtual);
+
+  atualizar();
+  return card;
+}
+
+function cartaoPitaco() {
+  const maxCotas = PITACO.niveis.length;
+  let qtd = 1;
+
+  const card = document.createElement("section");
+  card.className = "item pitaco";
+  card.innerHTML = `
+    <div class="item-topo">
+      <div class="icone">🗣️</div>
+      <div>
+        <h3 data-nivel></h3>
+        <p class="sub" data-texto></p>
+      </div>
+    </div>
+
+    <div class="cotas">
+      <div class="cotas-rotulo">Quantos pitacos você quer dar?</div>
+      <div class="stepper">
+        <button type="button" data-menos aria-label="Menos um pitaco">&minus;</button>
+        <div class="qtd"></div>
+        <button type="button" data-mais aria-label="Mais um pitaco">+</button>
+        <div class="valor">
+          <small>Você envia</small>
+          <strong data-total></strong>
+        </div>
+      </div>
+      <p class="selo-nivel" data-restante></p>
+    </div>
+
+    <div class="qr-area">
+      <div class="qr" data-qr></div>
+      <div class="qr-lado">
+        <p>Escaneie com o app do banco ou copie o código abaixo.</p>
+        <button type="button" class="copiar">Copiar código PIX</button>
+      </div>
+    </div>
+  `;
+
+  const elNivel    = card.querySelector("[data-nivel]");
+  const elTexto    = card.querySelector("[data-texto]");
+  const elTotal    = card.querySelector("[data-total]");
+  const elRestante = card.querySelector("[data-restante]");
+  const elQr       = card.querySelector("[data-qr]");
+  const btnMenos   = card.querySelector("[data-menos]");
+  const btnMais    = card.querySelector("[data-mais]");
+  const rotulo     = card.querySelector(".qtd");
+
+  let payloadAtual = "";
+
+  function atualizar() {
+    const nivel = PITACO.niveis[qtd - 1];
+    const valor = qtd * PITACO.cota;
+    payloadAtual = payloadPix(valor, PITACO.txid);
+
+    elNivel.textContent = nivel.titulo;
+    elTexto.innerHTML = nivel.texto;
+    rotulo.innerHTML = `<b>${qtd}</b> ${qtd === 1 ? "pitaco" : "pitacos"}`;
+    elTotal.textContent = brl.format(valor);
+    elRestante.textContent = qtd < maxCotas
+      ? `Mais um pitaco e você vira “${PITACO.niveis[qtd].titulo}”.`
+      : "Nível máximo. Não há pitaco acima deste.";
     btnMenos.disabled = qtd <= 1;
     btnMais.disabled = qtd >= maxCotas;
     desenharQr(elQr, payloadAtual);
@@ -665,6 +818,11 @@ function iniciar() {
   const lista = document.getElementById("lista");
   for (const item of ITENS) lista.appendChild(cartaoItem(item));
   if (MOSTRAR_VALOR_LIVRE) lista.appendChild(cartaoValorLivre());
+
+  if (PITACO.ativo) {
+    document.getElementById("pitaco").appendChild(cartaoPitaco());
+    document.getElementById("secao-pitaco").hidden = false;
+  }
 
   // Só mostra a seção de lojas se alguma tiver link preenchido.
   const lojas = LOJAS.filter((l) => l.url && l.url.trim());
