@@ -179,6 +179,13 @@
     display: grid; place-items: center; font-size: 17px;
   }
 
+  /* Aparece só quando a chave PIX não foi configurada */
+  .aviso {
+    margin: 20px 0 -10px; padding: 14px 18px; border-radius: 12px;
+    background: #FFF4E5; border: 1px solid #F0C88A; color: #7A4E12; font-size: .9rem;
+  }
+  .aviso code { background: rgba(0,0,0,.06); padding: 1px 5px; border-radius: 4px; font-size: .95em; }
+
   footer { text-align: center; margin-top: 48px; color: var(--tinta-suave); font-size: .88rem; }
   footer .coracao { color: var(--terracota); }
 
@@ -241,18 +248,25 @@
    ═══════════════════════════════════════════════════════════════════ */
 
 const CONFIG = {
-  // Sua chave PIX. Pode ser:
-  //   CPF ......... "12345678909"        (só números)
-  //   Celular ..... "+5511999998888"     (com +55)
-  //   E-mail ...... "voce@email.com"
-  //   Aleatória ... "123e4567-e89b-12d3-a456-426614174000"
-  chavePix: "SUA-CHAVE-PIX-AQUI",
+  // Chave PIX aleatória (EVP), gerada no app do banco:
+  //   Pix › Minhas chaves › Cadastrar chave › Chave aleatória
+  //
+  // Usamos chave aleatória de propósito: ela não expõe CPF, celular nem
+  // e-mail, e pode ser apagada e trocada no app a qualquer momento sem
+  // mexer na conta — o que não dá pra fazer com um CPF.
+  //
+  // A chave fica visível no código-fonte desta página, e isso é esperado:
+  // é justamente o que o convidado precisa pra conseguir pagar. Chave PIX
+  // só recebe, nunca saca.
+  chavePix: "5af2973f-0c3b-4d7b-941d-cbd632d914a8",
 
-  // Nome do recebedor (máx. 25 caracteres, sem acento — é sanitizado sozinho)
-  nomeRecebedor: "SEU NOME",
+  // Nome do recebedor (máx. 25 caracteres, sem acento — é sanitizado sozinho).
+  // Não precisa ser o nome completo: o app do pagador mostra o nome oficial
+  // registrado no DICT de qualquer forma.
+  nomeRecebedor: "CHRISTIAN E PAMELA",
 
   // Cidade do recebedor (máx. 15 caracteres)
-  cidade: "SAO PAULO",
+  cidade: "BRASILIA",
 
   // Textos da capa
   selo: "Chá de Casa Nova · Christian & Pâmela",
@@ -635,8 +649,16 @@ function iniciar() {
     document.getElementById("secao-lojas").hidden = false;
   }
 
+  // Trava de segurança: se a chave não foi configurada, os QR Codes existem
+  // mas não levam a lugar nenhum. Avisa na tela pra isso não passar batido.
   if (CONFIG.chavePix.includes("SUA-CHAVE")) {
     console.warn("⚠️  Configure a chave PIX em CONFIG.chavePix antes de publicar.");
+    const aviso = document.createElement("div");
+    aviso.className = "aviso";
+    aviso.innerHTML =
+      "⚠️ <b>Chave PIX ainda não configurada.</b> Os QR Codes desta página não " +
+      "funcionam. Preencha <code>chavePix</code> em <code>index.html</code>.";
+    document.querySelector(".wrap").prepend(aviso);
   }
 }
 

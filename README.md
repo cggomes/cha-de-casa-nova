@@ -22,9 +22,9 @@ Abra `index.html` e edite o bloco `CONFIG` no início do `<script>`:
 
 ```js
 const CONFIG = {
-  chavePix: "sua-chave@email.com",   // CPF, celular (+55...), e-mail ou chave aleatória
-  nomeRecebedor: "SEU NOME",         // máx. 25 caracteres
-  cidade: "SAO PAULO",               // máx. 15 caracteres
+  chavePix: "123e4567-e89b-...",     // chave aleatória (EVP) gerada no app do banco
+  nomeRecebedor: "CHRISTIAN E PAMELA",  // máx. 25 caracteres
+  cidade: "BRASILIA",                // máx. 15 caracteres
   selo: "Chá de Casa Nova · Christian & Pâmela",
   titulo: "Nosso cantinho começa aqui",
   casal: "Christian & Pâmela",
@@ -116,11 +116,29 @@ Para atualizar depois, basta editar `index.html`, commitar e dar push.
 
 ## Nota sobre privacidade
 
-A chave PIX fica visível no código-fonte da página — o que é esperado, já que é
-justamente o que os convidados precisam para pagar. Só tenha em mente que, num
-repositório público, ela também fica visível no GitHub. Chave PIX não dá acesso à conta:
-serve apenas para receber. Mas se preferir não expor um CPF ou celular pessoal, use uma
-**chave aleatória** gerada no app do banco.
+Este projeto usa **chave aleatória** (EVP) de propósito. Gere no app do banco:
+`Pix` › `Minhas chaves` › `Cadastrar chave` › `Chave aleatória`.
+
+A chave fica visível no código-fonte da página, e isso é esperado: é justamente o que o
+convidado precisa para conseguir pagar. Num repositório público ela também fica visível
+no GitHub. Isso não é uma brecha — chave PIX só recebe, nunca saca —, e a chave aleatória
+tem duas vantagens sobre CPF, celular ou e-mail:
+
+- não expõe nenhum dado pessoal;
+- é **descartável**: se um dia você quiser, apaga no app e gera outra, sem mexer na conta.
+  Com CPF ou celular isso é impossível.
+
+O que a chave aleatória **não** faz é tornar o pagamento anônimo: ao confirmar o PIX, o
+app do pagador mostra seu nome e um CPF parcialmente mascarado, consultados no DICT. Isso
+é do próprio protocolo do PIX, igual para qualquer tipo de chave.
+
+### Por que não usar GitHub Secrets pra isso
+
+Secrets e Environments do GitHub só existem em tempo de build. Como esta página é um
+arquivo estático que roda no navegador do convidado, tudo que o QR Code precisa tem que
+estar no HTML entregue. Um valor injetado por workflow acabaria dentro do `index.html`
+publicado, legível em "ver código-fonte". Segredo que o cliente precisa ler não é
+segredo — e chave PIX não é um segredo, é um número de conta feito pra ser distribuído.
 
 ## Licença
 
