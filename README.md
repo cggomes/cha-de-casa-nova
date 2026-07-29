@@ -25,8 +25,9 @@ const CONFIG = {
   chavePix: "sua-chave@email.com",   // CPF, celular (+55...), e-mail ou chave aleatória
   nomeRecebedor: "SEU NOME",         // máx. 25 caracteres
   cidade: "SAO PAULO",               // máx. 15 caracteres
-  titulo: "Nossa casa nova",
-  casal: "Christian & convidados",
+  selo: "Chá de Casa Nova · Christian & Pâmela",
+  titulo: "Nosso cantinho começa aqui",
+  casal: "Christian & Pâmela",
   recado: "...",
   festa: { data: "", hora: "", endereco: "" },  // "" esconde o campo
   usarTxid: true,
@@ -48,6 +49,36 @@ Depois edite a lista `ITENS`:
 ```
 
 O número de cotas é calculado sozinho (`total / cota`).
+
+### Lojinhas (comprar direto)
+
+Além do PIX, a página mostra uma seção com listas de presentes que você montou em lojas
+online. Edite a lista `LOJAS`:
+
+```js
+{
+  nome: "Nossa lista na Shopee",
+  plataforma: "Shopee",            // aparece como etiqueta no cartão
+  descricao: "Itens pequenos pra casa: utensílios, cama, mesa e banho.",
+  emoji: "🛍️",
+  url: "https://collshp.com/...",  // deixe "" pra esconder este cartão
+  cor: "#EE4D2D",                  // cor da marca, usada na borda e no botão
+}
+```
+
+Lojas com `url` vazia são ignoradas, e se **nenhuma** tiver link a seção inteira não
+aparece — dá pra ir adicionando aos poucos sem quebrar a página.
+
+Onde pegar o link de cada plataforma:
+
+| Loja | Caminho |
+|---|---|
+| Shopee | app › `Eu` › `Minha loja`/`Lista` › `Compartilhar` › `Copiar link` (vira `collshp.com/...`) |
+| Amazon | `Listas` › crie uma lista › `Enviar lista para amigos` |
+| Mercado Livre | `Favoritos` › crie uma lista pública › `Compartilhar` |
+
+Cores de marca úteis: Shopee `#EE4D2D`, Amazon `#FF9900`, Mercado Livre `#FFE600`,
+Magalu `#0086FF`, Casas Bahia `#0A21C0`.
 
 ### O truque do `txid`
 

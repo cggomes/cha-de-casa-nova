@@ -3,15 +3,15 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Chá de Casa Nova</title>
-<meta name="description" content="Nossa casa nova está começando. Se quiser fazer parte dela, aqui tem um cantinho pra você.">
+<title>Nosso cantinho começa aqui — Christian &amp; Pâmela</title>
+<meta name="description" content="Christian e Pâmela estão montando o primeiro cantinho deles. Escolha um presente e venha fazer parte dessa casa.">
 <meta name="theme-color" content="#C4674F">
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏡</text></svg>">
 
 <!-- Open Graph: controla como o link aparece no WhatsApp -->
 <meta property="og:type" content="website">
-<meta property="og:title" content="Chá de Casa Nova">
-<meta property="og:description" content="Nossa casa nova está começando. Se quiser fazer parte dela, aqui tem um cantinho pra você.">
+<meta property="og:title" content="Nosso cantinho começa aqui — Christian &amp; Pâmela">
+<meta property="og:description" content="Estamos montando nosso primeiro lar. Escolha um presente e venha fazer parte dessa casa.">
 
 <style>
   :root {
@@ -147,6 +147,38 @@
   }
   .campo-valor input:focus { outline: 2px solid var(--terracota); outline-offset: 1px; }
 
+  /* ---------- Lojinhas ---------- */
+  .secao-titulo { text-align: center; margin-bottom: 26px; }
+  .secao-titulo h2 {
+    font-family: var(--serif); font-weight: 400; font-size: clamp(1.5rem,5.5vw,1.9rem);
+    margin: 0 0 8px; letter-spacing: -.01em;
+  }
+  .secao-titulo p { margin: 0 auto; color: var(--tinta-suave); font-size: .96rem; max-width: 44ch; }
+
+  .loja {
+    display: flex; gap: 16px; align-items: center; text-decoration: none; color: inherit;
+    background: var(--papel); border: 1px solid var(--borda); border-radius: 20px;
+    padding: 22px 24px; margin-bottom: 16px; box-shadow: var(--sombra);
+    /* a cor da marca entra por --cor, definida inline em cada cartão */
+    border-left: 5px solid var(--cor, var(--terracota));
+    transition: transform .15s, box-shadow .15s;
+  }
+  .loja:hover { transform: translateY(-2px); box-shadow: 0 2px 4px rgba(46,39,36,.05), 0 14px 30px -10px rgba(46,39,36,.2); }
+  .loja:focus-visible { outline: 2px solid var(--cor, var(--terracota)); outline-offset: 3px; }
+  .loja .icone { background: color-mix(in srgb, var(--cor, var(--terracota)) 12%, #fff); }
+  .loja-texto { flex: 1; min-width: 0; }
+  .loja .tag {
+    display: inline-block; font-size: .68rem; font-weight: 700; letter-spacing: .1em;
+    text-transform: uppercase; color: var(--cor, var(--terracota)); margin-bottom: 4px;
+  }
+  .loja h3 { font-family: var(--serif); font-weight: 400; font-size: 1.25rem; margin: 0 0 3px; }
+  .loja p { margin: 0; font-size: .9rem; color: var(--tinta-suave); }
+  .loja .seta {
+    flex: 0 0 auto; width: 38px; height: 38px; border-radius: 50%;
+    background: var(--cor, var(--terracota)); color: #fff;
+    display: grid; place-items: center; font-size: 17px;
+  }
+
   footer { text-align: center; margin-top: 48px; color: var(--tinta-suave); font-size: .88rem; }
   footer .coracao { color: var(--terracota); }
 
@@ -162,7 +194,7 @@
 
 <div class="wrap">
   <header>
-    <div class="selo" id="selo">Chá de Casa Nova</div>
+    <div class="selo" id="selo"></div>
     <h1 id="titulo"></h1>
     <p class="casal" id="casal"></p>
     <p class="recado" id="recado"></p>
@@ -170,6 +202,11 @@
   </header>
 
   <div class="divisor"><span>🏡</span></div>
+
+  <div class="secao-titulo">
+    <h2>Ajudar com PIX</h2>
+    <p>Cada presente tem uma meta dividida em cotas. Escolha quantas quiser.</p>
+  </div>
 
   <div class="instrucoes">
     <h2>Como funciona</h2>
@@ -182,8 +219,18 @@
 
   <main id="lista"></main>
 
+  <section id="secao-lojas" hidden>
+    <div class="divisor"><span>🛍️</span></div>
+    <div class="secao-titulo">
+      <h2>Ou compre o presente</h2>
+      <p>Se preferir escolher e comprar você mesmo, separamos algumas listas prontas.</p>
+    </div>
+    <div id="lojas"></div>
+  </section>
+
   <footer>
-    Obrigado por fazer parte da nossa casa <span class="coracao">&#10084;</span>
+    Obrigado por fazer parte da nossa casa <span class="coracao">&#10084;</span><br>
+    <strong>Christian &amp; Pâmela</strong>
   </footer>
 </div>
 
@@ -208,10 +255,12 @@ const CONFIG = {
   cidade: "SAO PAULO",
 
   // Textos da capa
-  titulo: "Nossa casa nova",
-  casal: "Christian & convidados",
-  recado: "Estamos montando nosso cantinho e ficaríamos muito felizes com a sua ajuda. " +
-          "Escolha um presente abaixo — qualquer cota, por menor que pareça, faz diferença.",
+  selo: "Chá de Casa Nova · Christian & Pâmela",
+  titulo: "Nosso cantinho começa aqui",
+  casal: "Christian & Pâmela",
+  recado: "Trocamos as caixas de mudança por planos, e agora falta pouco pra essa casa " +
+          "virar nossa cara. Se quiser deixar sua marca nela, escolha um presente abaixo — " +
+          "qualquer cota, por menor que pareça, faz diferença.",
 
   // Detalhes da festa. Deixe a string vazia ("") para esconder cada um.
   festa: {
@@ -255,37 +304,40 @@ const ITENS = [
     txid: "MAQLAVAR",
     foto: "",
   },
-  {
-    nome: "Sofá",
-    descricao: "Onde as visitas vão ficar até tarde",
-    emoji: "🛋️",
-    total: 3500,
-    cota: 100,
-    txid: "SOFA",
-    foto: "",
-  },
-  {
-    nome: "Jogo de panelas",
-    descricao: "Completo, do refogado ao molho",
-    emoji: "🍲",
-    total: 800,
-    cota: 80,
-    txid: "PANELAS",
-    foto: "",
-  },
-  {
-    nome: "Microondas",
-    descricao: "Pro café requentado das segundas",
-    emoji: "📻",
-    total: 900,
-    cota: 90,
-    txid: "MICROONDAS",
-    foto: "",
-  },
 ];
 
 // Mostrar o cartão "qualquer valor" no final?
 const MOSTRAR_VALOR_LIVRE = true;
+
+/* ---------- Lojinhas ----------
+   Listas de presentes que você montou em lojas online. O convidado clica,
+   escolhe um item e compra direto por lá — sem PIX no meio.
+
+   Como pegar o link:
+     Shopee ......... app › Eu › Minha loja/Lista › Compartilhar › Copiar link
+                      (vira um link collshp.com/...)
+     Amazon ......... Listas › crie uma lista › Enviar lista para amigos
+     Mercado Livre .. Favoritos › crie uma lista pública › Compartilhar
+
+   `cor` é a cor da marca, usada na borda e no botão do cartão. */
+const LOJAS = [
+  {
+    nome: "Nossa lista na Shopee",
+    plataforma: "Shopee",
+    descricao: "Itens pequenos pra casa: utensílios, cama, mesa e banho.",
+    emoji: "🛍️",
+    url: "https://collshp.com/pmelanikole994?share_channel_code=1&view=storefront",
+    cor: "#EE4D2D",
+  },
+  {
+    nome: "Nossa lista na Amazon",
+    plataforma: "Amazon",
+    descricao: "Eletroportáteis e coisas de cozinha que a gente separou.",
+    emoji: "📦",
+    url: "https://www.amazon.com.br/hz/wishlist/ls/3NOEO0US7DGG8?ref_=wl_share",
+    cor: "#FF9900",
+  },
+];
 
 /* ═══════════════════════════════════════════════════════════════════
    ②  Daqui pra baixo não precisa mexer
@@ -410,6 +462,7 @@ function ligarBotaoCopiar(botao, obterTexto) {
 /* ---------- Montagem da página ---------- */
 
 function montarCapa() {
+  document.getElementById("selo").textContent = CONFIG.selo;
   document.getElementById("titulo").textContent = CONFIG.titulo;
   document.getElementById("casal").textContent = CONFIG.casal;
   document.getElementById("recado").textContent = CONFIG.recado;
@@ -473,7 +526,6 @@ function cartaoItem(item) {
     </div>
   `;
 
-  const elQtd    = card.querySelector("[data-qtd]");
   const elTotal  = card.querySelector("[data-total]");
   const elQr     = card.querySelector("[data-qr]");
   const btnMenos = card.querySelector("[data-menos]");
@@ -486,8 +538,7 @@ function cartaoItem(item) {
     const valor = qtd * item.cota;
     payloadAtual = payloadPix(valor, item.txid);
 
-    elQtd.textContent = qtd;
-    rotulo.innerHTML = `<b data-qtd>${qtd}</b> ${qtd === 1 ? "cota" : "cotas"}`;
+    rotulo.innerHTML = `<b>${qtd}</b> ${qtd === 1 ? "cota" : "cotas"}`;
     elTotal.textContent = brl.format(valor);
     btnMenos.disabled = qtd <= 1;
     btnMais.disabled = qtd >= maxCotas;
@@ -549,12 +600,40 @@ function cartaoValorLivre() {
   return card;
 }
 
+function cartaoLoja(loja) {
+  const a = document.createElement("a");
+  a.className = "loja";
+  a.href = loja.url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  a.style.setProperty("--cor", loja.cor || "");
+  a.innerHTML = `
+    <div class="icone">${loja.emoji || "🛍️"}</div>
+    <div class="loja-texto">
+      ${loja.plataforma ? `<span class="tag">${loja.plataforma}</span>` : ""}
+      <h3>${loja.nome}</h3>
+      <p>${loja.descricao || ""}</p>
+    </div>
+    <div class="seta" aria-hidden="true">&rarr;</div>
+  `;
+  a.setAttribute("aria-label", `${loja.nome} — abre em nova aba`);
+  return a;
+}
+
 function iniciar() {
   montarCapa();
 
   const lista = document.getElementById("lista");
   for (const item of ITENS) lista.appendChild(cartaoItem(item));
   if (MOSTRAR_VALOR_LIVRE) lista.appendChild(cartaoValorLivre());
+
+  // Só mostra a seção de lojas se alguma tiver link preenchido.
+  const lojas = LOJAS.filter((l) => l.url && l.url.trim());
+  if (lojas.length) {
+    const caixa = document.getElementById("lojas");
+    for (const loja of lojas) caixa.appendChild(cartaoLoja(loja));
+    document.getElementById("secao-lojas").hidden = false;
+  }
 
   if (CONFIG.chavePix.includes("SUA-CHAVE")) {
     console.warn("⚠️  Configure a chave PIX em CONFIG.chavePix antes de publicar.");
