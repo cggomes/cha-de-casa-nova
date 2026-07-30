@@ -119,6 +119,26 @@
   .meta { margin-top: 8px; font-size: .85rem; color: var(--tinta-suave); }
   .meta b { color: var(--tinta); font-weight: 600; }
 
+  /* ---------- Presente já garantido ---------- */
+  .item--comprado {
+    background: var(--creme-alt); box-shadow: none;
+    border-style: dashed; border-color: #DFD2BE;
+  }
+  .item--comprado .foto { filter: grayscale(1); opacity: .5; background: transparent; }
+  .item--comprado .icone { filter: grayscale(1); opacity: .6; }
+  .item--comprado h3 {
+    color: var(--tinta-suave);
+    text-decoration: line-through;
+    text-decoration-color: #C6B49A;
+    text-decoration-thickness: 1px;
+  }
+  .item--comprado .sub, .item--comprado .meta { color: #8A7C71; }
+  .tag-comprado {
+    display: inline-block; margin-bottom: 6px;
+    font-size: .68rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: #fff; background: var(--verde); padding: 3px 10px; border-radius: 999px;
+  }
+
   /* ---------- Seletor de cotas ---------- */
   .cotas { margin-top: 22px; padding-top: 22px; border-top: 1px dashed var(--borda); }
   .cotas-rotulo { font-size: .8rem; text-transform: uppercase; letter-spacing: .1em; color: var(--tinta-suave); margin-bottom: 12px; font-weight: 600; }
@@ -349,6 +369,7 @@ const ITENS = [
     total: 80,
     cota: 80,
     txid: "Talheres",
+    comprado: true,   // já presenteado: cartão fica cinza, sem QR nem botão
     foto: "fotos/talheres.jpg",
   },
   {
@@ -376,6 +397,7 @@ const ITENS = [
     total: 200,
     cota: 200,
     txid: "RoupaDeCama",
+    comprado: true,   // já presenteado: cartão fica cinza, sem QR nem botão
     foto: "fotos/roupa-cama.jpg",
     // Foto de ambiente, não recorte em fundo branco: preenche o quadro
     // inteiro em vez de ficar com tarja branca dos lados no celular.
@@ -608,7 +630,34 @@ function montarCapa() {
   }
 }
 
+/* Cartão de presente que alguém já garantiu. Não gera QR nem payload PIX —
+   o bloco de cotas simplesmente não existe, em vez de ficar escondido no CSS. */
+function cartaoComprado(item) {
+  const card = document.createElement("section");
+  card.className = "item item--comprado";
+  card.innerHTML = `
+    <div class="item-topo">
+      ${
+        item.foto
+          ? `<div class="foto${item.ajuste === "cover" ? " foto--cheia" : ""}">
+               <img src="${item.foto}" alt="${item.nome}" decoding="async">
+             </div>`
+          : `<div class="icone">${item.emoji || "🎁"}</div>`
+      }
+      <div>
+        <span class="tag-comprado">Já ganhamos esse 💚</span>
+        <h3>${item.nome}</h3>
+        <p class="sub">${item.descricao || ""}</p>
+        <p class="meta">Alguém muito gentil já cuidou desse. Obrigado!</p>
+      </div>
+    </div>
+  `;
+  return card;
+}
+
 function cartaoItem(item) {
+  if (item.comprado) return cartaoComprado(item);
+
   const maxCotas = Math.max(1, Math.round(item.total / item.cota));
   const umaCotaSo = maxCotas === 1;
   let qtd = 1;
