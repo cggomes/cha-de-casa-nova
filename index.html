@@ -194,11 +194,52 @@
       linear-gradient(135deg, var(--terracota), var(--verde)) border-box;
     border: 2px solid transparent;
   }
-  .pitaco .icone { background: var(--creme-alt); }
-  .pitaco h3 { color: var(--terracota); }
-  .selo-nivel {
-    margin: 14px 0 0; font-size: .84rem; color: var(--verde);
-    font-style: italic;
+  .pitaco-niveis { display: grid; gap: 10px; }
+  .nivel {
+    display: block; cursor: pointer; padding: 14px 16px;
+    border: 1px solid var(--borda); border-radius: 14px; background: #fff;
+    transition: border-color .15s, background .15s;
+  }
+  .nivel:hover { border-color: #DCCDB8; background: #FFFDFA; }
+  .nivel:focus-within { outline: 2px solid var(--terracota); outline-offset: 2px; }
+  /* O radio some da tela mas continua existindo: é ele que dá navegação por
+     teclado e o comportamento de "escolhe um só" de graça. */
+  .nivel input { position: absolute; opacity: 0; width: 0; height: 0; }
+  .nivel--ativo {
+    border-color: var(--terracota); background: #FDF4EF;
+    box-shadow: inset 0 0 0 1px var(--terracota);
+  }
+  .nivel-topo { display: flex; align-items: center; gap: 10px; }
+  .nivel-num {
+    flex: 0 0 auto; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--creme-alt); color: var(--tinta-suave);
+    display: grid; place-items: center; font-size: .78rem; font-weight: 700;
+  }
+  .nivel--ativo .nivel-num { background: var(--terracota); color: #fff; }
+  .nivel-nome { font-family: var(--serif); font-size: 1.06rem; }
+  .nivel-preco {
+    margin-left: auto; font-family: var(--serif); font-size: 1.06rem;
+    color: var(--terracota); white-space: nowrap;
+  }
+  .nivel-texto {
+    display: block; margin-top: 5px; padding-left: 34px;
+    font-size: .87rem; color: var(--tinta-suave);
+  }
+
+  .pitaco-escolha {
+    display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+    margin-top: 20px; padding-top: 18px; border-top: 1px dashed var(--borda);
+    font-size: .9rem; color: var(--tinta-suave);
+  }
+  .pitaco-escolha b { color: var(--tinta); font-weight: 600; }
+  .pitaco-escolha strong {
+    margin-left: auto; font-family: var(--serif); font-weight: 400;
+    font-size: 1.5rem; color: var(--terracota);
+  }
+
+  @media (max-width: 460px) {
+    .nivel-texto { padding-left: 0; }
+    .pitaco-escolha strong { margin-left: 0; }
   }
 
   /* ---------- Lojinhas ---------- */
@@ -291,8 +332,10 @@
     <div class="divisor"><span>🗣️</span></div>
     <div class="secao-titulo">
       <h2>Dar Pitaco</h2>
-      <p>A cota mais nobre de todas. Aqui você não compra um móvel —
-         compra o direito de opinar sobre ele.</p>
+      <p>Toda casa nova vem com opiniões de graça. Aqui elas têm tabela de preço.
+         Escolha um nível abaixo — quanto mais alto, mais poder de palpite você
+         ganha sobre a nossa casa. <b>É brincadeira, claro</b>: o dinheiro vira
+         móvel de verdade igual aos outros presentes.</p>
     </div>
     <div id="pitaco"></div>
   </section>
@@ -791,33 +834,32 @@ function cartaoItem(item) {
   return card;
 }
 
+/* Todos os níveis ficam visíveis de uma vez, como um cardápio. A versão
+   anterior mostrava um nível por vez atrás de um stepper, e quem não
+   apertasse o "+" nunca descobria que existiam outros quatro. */
 function cartaoPitaco() {
-  const maxCotas = PITACO.niveis.length;
-  let qtd = 1;
+  let escolhido = 0;
 
   const card = document.createElement("section");
   card.className = "item pitaco";
   card.innerHTML = `
-    <div class="item-topo">
-      <div class="icone">🗣️</div>
-      <div>
-        <h3 data-nivel></h3>
-        <p class="sub" data-texto></p>
-      </div>
+    <div class="pitaco-niveis" role="radiogroup" aria-label="Escolha o nível de pitaco">
+      ${PITACO.niveis.map((nivel, i) => `
+        <label class="nivel${i === 0 ? " nivel--ativo" : ""}">
+          <input type="radio" name="pitaco" value="${i}" ${i === 0 ? "checked" : ""}>
+          <span class="nivel-topo">
+            <span class="nivel-num">${i + 1}</span>
+            <span class="nivel-nome">${nivel.titulo}</span>
+            <span class="nivel-preco">${brl.format((i + 1) * PITACO.cota)}</span>
+          </span>
+          <span class="nivel-texto">${nivel.texto}</span>
+        </label>
+      `).join("")}
     </div>
 
-    <div class="cotas">
-      <div class="cotas-rotulo">Quantos pitacos você quer dar?</div>
-      <div class="stepper">
-        <button type="button" data-menos aria-label="Menos um pitaco">&minus;</button>
-        <div class="qtd"></div>
-        <button type="button" data-mais aria-label="Mais um pitaco">+</button>
-        <div class="valor">
-          <small>Você envia</small>
-          <strong data-total></strong>
-        </div>
-      </div>
-      <p class="selo-nivel" data-restante></p>
+    <div class="pitaco-escolha">
+      <span>Você escolheu <b data-escolha></b> e envia</span>
+      <strong data-total></strong>
     </div>
 
     <div class="qr-area">
@@ -829,36 +871,30 @@ function cartaoPitaco() {
     </div>
   `;
 
-  const elNivel    = card.querySelector("[data-nivel]");
-  const elTexto    = card.querySelector("[data-texto]");
-  const elTotal    = card.querySelector("[data-total]");
-  const elRestante = card.querySelector("[data-restante]");
-  const elQr       = card.querySelector("[data-qr]");
-  const btnMenos   = card.querySelector("[data-menos]");
-  const btnMais    = card.querySelector("[data-mais]");
-  const rotulo     = card.querySelector(".qtd");
+  const elEscolha = card.querySelector("[data-escolha]");
+  const elTotal   = card.querySelector("[data-total]");
+  const elQr      = card.querySelector("[data-qr]");
+  const rotulos   = [...card.querySelectorAll(".nivel")];
 
   let payloadAtual = "";
 
   function atualizar() {
-    const nivel = PITACO.niveis[qtd - 1];
-    const valor = qtd * PITACO.cota;
+    const nivel = PITACO.niveis[escolhido];
+    const valor = (escolhido + 1) * PITACO.cota;
     payloadAtual = payloadPix(valor, PITACO.txid);
 
-    elNivel.textContent = nivel.titulo;
-    elTexto.innerHTML = nivel.texto;
-    rotulo.innerHTML = `<b>${qtd}</b> ${qtd === 1 ? "pitaco" : "pitacos"}`;
+    rotulos.forEach((r, i) => r.classList.toggle("nivel--ativo", i === escolhido));
+    elEscolha.textContent = nivel.titulo;
     elTotal.textContent = brl.format(valor);
-    elRestante.textContent = qtd < maxCotas
-      ? `Mais um pitaco e você vira “${PITACO.niveis[qtd].titulo}”.`
-      : "Nível máximo. Não há pitaco acima deste.";
-    btnMenos.disabled = qtd <= 1;
-    btnMais.disabled = qtd >= maxCotas;
     desenharQr(elQr, payloadAtual);
   }
 
-  btnMenos.addEventListener("click", () => { if (qtd > 1)        { qtd--; atualizar(); } });
-  btnMais .addEventListener("click", () => { if (qtd < maxCotas) { qtd++; atualizar(); } });
+  card.querySelectorAll('input[name="pitaco"]').forEach((input) => {
+    input.addEventListener("change", () => {
+      escolhido = Number(input.value);
+      atualizar();
+    });
+  });
   ligarBotaoCopiar(card.querySelector(".copiar"), () => payloadAtual);
 
   atualizar();
